@@ -1,0 +1,47 @@
+{
+    "name": "DestinationLineItemTable",
+    "properties": {
+        "structure": [
+            {
+                "name": "OrderID",
+                "type": "Int32"
+            },
+            {
+                "name": "OrderLineID",
+                "type": "Int32"
+            },
+            {
+                "name": "StockItemID",
+                "type": "Int32"
+            },
+            {
+                "name": "StockItemName",
+                "type": "String"
+            },
+            {
+                "name": "Quantity",
+                "type": "Int32"
+            },
+            {
+                "name": "UnitPrice",
+                "type": "Decimal"
+            },
+            {
+                "name": "LineTotal",
+                "type": "Decimal"
+            }
+        ],
+        "published": false,
+        "type": "AzureSqlTable",
+        "linkedServiceName": "AzureSqlLinkedService",
+        "typeProperties": {
+            "tableName": "[dbo].[LineItems]"
+        },
+        "availability": {
+            "frequency": "Day",
+            "interval": 1
+        },
+        "external": false,
+        "policy": {}
+    }
+}
