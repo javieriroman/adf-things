@@ -1,0 +1,39 @@
+{
+    "name": "DestinationOrderTable",
+    "properties": {
+        "structure": [
+            {
+                "name": "OrderDate",
+                "type": "String"
+            },
+            {
+                "name": "OrderID",
+                "type": "Int32"
+            },
+            {
+                "name": "CustomerID",
+                "type": "Int32"
+            },
+            {
+                "name": "CustomerName",
+                "type": "String"
+            },
+            {
+                "name": "Total",
+                "type": "Decimal"
+            }
+        ],
+        "published": false,
+        "type": "AzureSqlTable",
+        "linkedServiceName": "AzureSqlLinkedService",
+        "typeProperties": {
+            "tableName": "[dbo].[Orders]"
+        },
+        "availability": {
+            "frequency": "Day",
+            "interval": 1
+        },
+        "external": false,
+        "policy": {}
+    }
+}
