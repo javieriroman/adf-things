@@ -1,0 +1,121 @@
+{
+    "name": "Final-lab-blob-USQL-azuresql",
+    "properties": {
+        "activities": [
+            {
+                "type": "DataLakeAnalyticsU-SQL",
+                "typeProperties": {
+                    "scriptPath": "sales/sales.usql",
+                    "scriptLinkedService": "AzureStorageLinkedService",
+                    "degreeOfParallelism": 2,
+                    "parameters": {
+                        "sales_file": "$$Text.Format('wasb://sales@jrsbigdatastorage.blob.core.windows.net/{0:yyyy}/{1:MM}/{1:dd}.txt', SliceStart, SliceStart, SliceStart)",
+                        "lineitems_file": "$$Text.Format('sales/lineitems/{0:yyyy}/{1:MM}/{1:dd}/lineitems.txt', SliceStart, SliceStart, SliceStart)",
+                        "orders_file": "$$Text.Format('sales/orders/{0:yyyy}/{1:MM}/{1:dd}/orders.txt', SliceStart, SliceStart, SliceStart)"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "SourceAzureBlobDatasetlab5"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "usql-output-lineitem"
+                    },
+                    {
+                        "name": "usql-ouput-order"
+                    }
+                ],
+                "policy": {
+                    "timeout": "01:00:00",
+                    "concurrency": 2,
+                    "retry": 2
+                },
+                "scheduler": {
+                    "frequency": "Day",
+                    "interval": 1
+                },
+                "name": "U-SQL Script to extract and trasform sales data",
+                "linkedServiceName": "ADLAnalyticsLinkedService"
+            },
+            {
+                "type": "Copy",
+                "typeProperties": {
+                    "source": {
+                        "type": "AzureDataLakeStoreSource",
+                        "recursive": false
+                    },
+                    "sink": {
+                        "type": "SqlSink",
+                        "writeBatchSize": 0,
+                        "writeBatchTimeout": "00:00:00"
+                    },
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "columnMappings": "OrderDate:OrderDate,OrderID:OrderID,CustomerID:CustomerID,CustomerName:CustomerName,Total:Total"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "usql-ouput-order"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "DestinationOrderTable"
+                    }
+                ],
+                "policy": {
+                    "timeout": "01:00:00",
+                    "concurrency": 2,
+                    "retry": 2
+                },
+                "scheduler": {
+                    "frequency": "Day",
+                    "interval": 1
+                },
+                "name": "Copy orders data to SQL"
+            },
+            {
+                "type": "Copy",
+                "typeProperties": {
+                    "source": {
+                        "type": "AzureDataLakeStoreSource",
+                        "recursive": false
+                    },
+                    "sink": {
+                        "type": "SqlSink",
+                        "writeBatchSize": 0,
+                        "writeBatchTimeout": "00:00:00"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "usql-output-lineitem"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "DestinationLineItemTable"
+                    }
+                ],
+                "policy": {
+                    "timeout": "01:00:00",
+                    "concurrency": 2,
+                    "retry": 2
+                },
+                "scheduler": {
+                    "frequency": "Day",
+                    "interval": 1
+                },
+                "name": "Copy lineitem data to SQL"
+            }
+        ],
+        "start": "2016-01-01T00:00:00Z",
+        "end": "2016-04-01T23:59:59Z",
+        "isPaused": false,
+        "hubName": "jrsadf_hub",
+        "pipelineMode": "Scheduled"
+    }
+}
