@@ -1,0 +1,85 @@
+{
+    "name": "SourceAzureBlobDatasetlab5",
+    "properties": {
+        "structure": [
+            {
+                "name": "OrderDate",
+                "type": "String"
+            },
+            {
+                "name": "OrderID",
+                "type": "Int32"
+            },
+            {
+                "name": "CustomerID",
+                "type": "Int32"
+            },
+            {
+                "name": "CustomerName",
+                "type": "String"
+            },
+            {
+                "name": "OrderLineID",
+                "type": "Int32"
+            },
+            {
+                "name": "StockItemID",
+                "type": "Int32"
+            },
+            {
+                "name": "StockItemName",
+                "type": "String"
+            },
+            {
+                "name": "Quantity",
+                "type": "Int32"
+            },
+            {
+                "name": "UnitPrice",
+                "type": "Decimal"
+            }
+        ],
+        "published": false,
+        "type": "AzureBlob",
+        "linkedServiceName": "AzureStorageLinkedService",
+        "typeProperties": {
+            "folderPath": "/sales/{Year}/{Month}/{Day}",
+            "format": {
+                "type": "TextFormat",
+                "columnDelimiter": " "
+            },
+            "partitionedBy": [
+                {
+                    "name": "Year",
+                    "value": {
+                        "type": "DateTime",
+                        "date": "SliceStart",
+                        "format": "yyyy"
+                    }
+                },
+                {
+                    "name": "Month",
+                    "value": {
+                        "type": "DateTime",
+                        "date": "SliceStart",
+                        "format": "MM"
+                    }
+                },
+                {
+                    "name": "Day",
+                    "value": {
+                        "type": "DateTime",
+                        "date": "SliceStart",
+                        "format": "dd"
+                    }
+                }
+            ]
+        },
+        "availability": {
+            "frequency": "Day",
+            "interval": 1
+        },
+        "external": true,
+        "policy": {}
+    }
+}
